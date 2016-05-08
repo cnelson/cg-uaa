@@ -235,7 +235,9 @@
 
     <bean id="savedRequestAwareAuthenticationDetailsSource" class="org.cloudfoundry.identity.uaa.security.SavedRequestAwareAuthenticationDetailsSource"/>
 
-    <bean id="loginAuthenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+    <bean id="loginAuthenticationFailureHandler" class="org.cloudfoundry.identity.uaa.authentication.IDPAwareAuthenticationFailureHandler">
+        <property name="spEntityID" ref="samlEntityID"/>
+        <property name="providers" ref="identityProviderProvisioning"/>
         <property name="exceptionMappings">
             <map>
                 <entry key="org.cloudfoundry.identity.uaa.authentication.AccountNotVerifiedException" value="/login?error=account_not_verified" />

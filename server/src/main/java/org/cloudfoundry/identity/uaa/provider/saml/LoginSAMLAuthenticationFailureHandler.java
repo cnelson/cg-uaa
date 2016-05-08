@@ -32,8 +32,11 @@ public class LoginSAMLAuthenticationFailureHandler extends SimpleUrlAuthenticati
 
         String redirectTo = null;
 
-        if (exception instanceof LoginSAMLException) {
-
+        if (exception instanceof LoginSAMLNotInvitedException) {
+            setDefaultFailureUrl("/saml_error/not_invited");
+        } else if (exception instanceof LoginSAMLDupeException) {
+            setDefaultFailureUrl("/saml_error/dupe");
+        } else if (exception instanceof LoginSAMLException) {
             HttpSession session = request.getSession();
             if (session != null) {
                 DefaultSavedRequest savedRequest =
@@ -57,7 +60,6 @@ public class LoginSAMLAuthenticationFailureHandler extends SimpleUrlAuthenticati
                 }
             }
         }
-
         if (redirectTo == null) {
             Throwable cause = exception.getCause();
             if (cause != null) {

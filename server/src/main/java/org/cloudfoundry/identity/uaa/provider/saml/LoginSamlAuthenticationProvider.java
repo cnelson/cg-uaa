@@ -304,8 +304,14 @@ public class LoginSamlAuthenticationProvider extends SAMLAuthenticationProvider 
                 user = uaaUser.modifyUsername(samlPrincipal.getName());
             } else {
                 if (!addNew) {
-                    throw new LoginSAMLException("SAML user does not exist. "
-                            + "You can correct this by creating a shadow user for the SAML user.", e);
+                    // check to see if they have a UAA account with the same login, that hasn't had it's origin updated
+                    uaaUser = userDatabase.retrieveUserByEmail(userWithSamlAttributes.getEmail(), OriginKeys.UAA);
+
+                    if (uaaUser != null) {
+                        throw new LoginSAMLDupeException("A user already exists with this username.", e);
+                    } else {
+                        throw new LoginSAMLNotInvitedException("This user has not been invited.", e);
+                    }
                 }
                 // Register new users automatically
                 publish(new NewUserAuthenticatedEvent(userWithSamlAttributes));

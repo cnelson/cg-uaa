@@ -148,11 +148,26 @@ public class HomeController {
     }
 
     @RequestMapping("/saml_error")
-    public String error401(Model model, HttpServletRequest request) {
+    public String saml_generic_error401(Model model, HttpServletRequest request) {
         AuthenticationException exception = (AuthenticationException) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         model.addAttribute("saml_error", exception.getMessage());
         return "external_auth_error";
     }
+
+   @RequestMapping("/saml_error/dupe")
+    public String saml_dupe_error401(Model model, HttpServletRequest request) {
+        AuthenticationException exception = (AuthenticationException) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        model.addAttribute("saml_error", exception.getMessage());
+        return "saml_dupe";
+    }
+
+   @RequestMapping("/saml_error/not_invited")
+    public String samle_not_invited_error401(Model model, HttpServletRequest request) {
+        AuthenticationException exception = (AuthenticationException) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        model.addAttribute("saml_error", exception.getMessage());
+        return "saml_not_invited";
+    }
+
 
     @RequestMapping("/oauth_error")
     public String error_oauth() throws URISyntaxException {
